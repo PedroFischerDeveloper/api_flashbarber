@@ -1,5 +1,6 @@
 const express = require("express");
 
+const { check, validationResult }  = require('express-validator/check');
 
 const router = express.Router();
 const Hour = require('./Hour');
@@ -17,8 +18,12 @@ router.get("/admin/hour", (req, res) => {
 router.get("/admin/hour/:id", (req, res) => {
     const param_id = req.params.id; 
 
-    if(param_id == undefined || isNaN(param_id)) {
-        res.status(401).json({response: "ID NOT FOUND"});
+    if(param_id == undefined) {
+        res.status(400).json({response: "Id não pode ser nulo"});
+    }
+
+    if(isNaN(param_id)) {
+        res.status(400).json({response: "Id precisa ser um número"});
     }
 
     Hour.findByPk(param_id).then(dbHour => {  
@@ -34,7 +39,7 @@ router.post("/admin/hour/save", (req, res) => {
     const request = req.body; 
 
     if(!Array.isArray(request.hours)) {
-        res.status(401).json({response: "ID NOT FOUND"});
+        res.status(400).json({response: "Id não pode ser nulo"});
     }
 
     try {
@@ -51,7 +56,7 @@ router.post("/admin/hour/save", (req, res) => {
             });
         });
     } catch(err) {
-        res.json({status: 500, response: "server processing error"});
+        res.json({status: 500, response: "Erro de servidor"});
     }
    
 });
@@ -61,12 +66,12 @@ router.put("/admin/hour/update", (req, res) => {
     const request_body = req.body; 
 
     if(request_body.id == undefined || isNaN(request_body.id)) {
-        res.json({status: 404, response: "id not found"});
+        res.json({status: 404, response: "Id não pode ser nulo"});
     }
 
     Hour.findByPk(request_body.id).then(dbResponse => {
         if(dbResponse == undefined) {
-            res.status(401).json({response: "ID NOT FOUND"});
+            res.status(400).json({response: "Id não localizado"});
         } else {
             dbResponse.update({
                 hour: request_body.hour

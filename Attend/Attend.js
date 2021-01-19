@@ -21,6 +21,6 @@ const Attend = connection.define('attend', {
 
 Hour.hasMany(Attend);
 
-//Attend.sync({force: true});
+Attend.sync({force: true});
 
 module.exports = Attend;

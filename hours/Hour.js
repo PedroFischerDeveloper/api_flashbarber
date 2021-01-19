@@ -9,6 +9,6 @@ const Hour = connection.define('hour', {
     }
 });
 
-//Hour.sync({force: true});
+Hour.sync({force: true});
 
 module.exports = Hour;
