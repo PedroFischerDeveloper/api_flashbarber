@@ -6,18 +6,47 @@ const { check, validationResult }  = require('express-validator/check');
 const router = express.Router();
 const Attend = require('../../Models/Attend');
 
-router.get("/admin/attends", (req, res) => {
-    Attend.findAll(
-        {
-            where: {
-                deleted: 0
-            }
+router.get("/admin/attends/page/:id", (req, res) => {
+    let page = req.params.num; 
+    let offset = 0;
+    let limit = 5;
+
+    if(isNaN(limit) || limit <= 5) {
+        limit = 5;
+    }
+
+    if(isNaN(page) || page == 1) {
+        offset = 0;
+    } else {
+        offset = (parseInt(page) - 1 ) * 5;
+    }
+    Attend.findAndCountAll({
+        limit: limit,
+        offset: offset, 
+        order:[
+            ['id', 'desc']
+        ],
+    }).then(attend => {
+        
+        let next;
+
+        if(offset + 5 > attend.count) {
+            next = false;
+        } else {
+            next = true;
         }
-        ).then((dbResponse) => {
-        res.status(200).json({response: dbResponse});
-    }).catch((err) => {
+
+        let response = {
+            attend: attend,
+            next: next, 
+            page: parseInt(page)
+        }
+
+        res.status(200).json({response: response});
+
+    }).catch(err => {
         res.status(500).json({response: err.name});
-    })
+    });
 });
 
 router.get("/admin/attends/:id",(req, res) => {
@@ -35,7 +64,7 @@ router.get("/admin/attends/:id",(req, res) => {
         {
             where:{
                 id: request.id,
-                deleted: 0
+                deleted: 0,
             }
         }
         ).then((dbResponse) => {

@@ -30,7 +30,7 @@ connection
 //controllers
 app.use("/", hourController);
 app.use("/", AttendController);
-app.use("/", homeController);
+app.use("/atendimento/", homeController);
 
 app.listen(8080, () => {
     console.log("servidor online");
