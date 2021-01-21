@@ -5,6 +5,28 @@ const { check, validationResult }  = require('express-validator/check');
 
 const router = express.Router();
 const Attend = require('../../Models/Attend');
+const { Op } = require("sequelize");
+const { route } = require("../hours/hourCrontroller");
+
+router.get("/admin/attends/avaliable", (req, res) => {
+
+    const {start, end} = getNow();
+    
+    Attend.findAll(
+        {
+            where: {
+                avaliable: true,
+                createdAt: {
+                    [Op.between]:[start, end]
+                }
+            }
+        }
+    ).then(dbResponse => {
+        res.status(200).json({response: dbResponse});
+    }).catch(err => {
+        res.status(500).json({response: err});
+    })
+});
 
 router.get("/admin/attends/page/:id", (req, res) => {
     let page = req.params.num; 
@@ -75,8 +97,43 @@ router.get("/admin/attends/:id",(req, res) => {
 
 });
 
-router.post("/admin/attends/save", 
-[
+const getNow = () => {
+
+    let myDate = new Date();
+    let myDate_string = myDate.toISOString();
+    myDate_string = myDate_string.replace("T"," ");
+    myDate_string = myDate_string.substring(0, myDate_string.length - 5);
+
+    tomorrowToFormat = myDate_string.split(" ");
+
+    endDay   = tomorrowToFormat[0] + " 23:59:59";
+    startDay = tomorrowToFormat[0] + " 10:00:00";
+
+    return {start: startDay, end: endDay};
+}
+
+router.post("/admin/attends/define/avaliable", 
+[ 
+    check("hourId").not().isEmpty().withMessage('Horário não pode ser nulo')
+],(req, res) => {
+    
+    const {hourId} = req.body;
+    
+    hourId.forEach(hour => {
+        Attend.create({
+            deleted: 0,
+            avaliable: 1,
+            hourId: hour
+        }).then(dbResponse => {
+            res.status(200).json({response: dbResponse});
+        }).catch(err => {
+            res.status(500).json({response: err});
+        }); 
+    });
+
+});
+
+router.put("/admin/attends/update", [
     check("name").not().isEmpty().isLength({min: 5, max: 60}).withMessage('Nome não pode ser nulo, minímo de 5 caracteres e máximo de 60 caracteres'),
     check("email").not().isEmpty().withMessage('E-mail não pode ser nulo'),
     check("phone").not().isEmpty().withMessage('Telefone não pode ser nulo'),
@@ -111,7 +168,7 @@ router.post("/admin/attends/save",
         } 
         return true
     }),
-    check("hourId").not().isEmpty().withMessage('Horário não pode ser nulo'),
+    check("id").not().isEmpty().withMessage('Horário não pode ser nulo'),
 ], (req, res) => {
     const errors = validationResult(req);
 
@@ -119,33 +176,28 @@ router.post("/admin/attends/save",
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const {name, email, phone, hourId} = req.body;
+    const {id, name, phone, email} = req.body;
 
-    Attend.findOne(
-        {
-            where: {
-                hourId:hourId 
-            }
-        }
-    ).then((dbResponse) => {
+    Attend.findByPk(id)
+    .then(dbResponse => {
         if(dbResponse == undefined) {
-            Attend.create({
+            res.status(404).json({response: "Horário não existe"});
+        } else {
+            dbResponse.update({
                 name, 
-                email, 
                 phone, 
                 hourId,
-                deleted: 0
-            }).then(dbResponse => {
-                res.status(201).json({response: dbResponse, message: "Horário marcado com sucesso"});
-            }).catch(err => {
-                res.status(500).json({response: err.name});
+                avaliable: 0,
+                email
             });
-        } else {
-            res.status(400).json({response: "horário já registrado, selecione outro horário"});
+            res.status(200).json({response: dbResponse, message: "agendado com sucesso!"});
         }
-    }).catch((err) => {
-        res.status(500).json({response: err.name});
     })
+    .catch(err => {
+        res.status(404).json({response: err.name});
+    })
+
+
 });
 
 router.delete("/admin/attends/delete", [check("hourId").not().isEmpty().withMessage('Horário não pode ser nulo')] ,(req,res) => {

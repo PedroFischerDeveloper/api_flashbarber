@@ -52,7 +52,7 @@ router.post("/admin/hour/save", (req, res) => {
             }).then(dbResponse => {
                 res.status(201).json({response: dbResponse});
             }).catch((err) => {
-                res.status(500).json({response: err.name});
+                res.status(500).json({response: err});
             });
         });
     } catch(err) {

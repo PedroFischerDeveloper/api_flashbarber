@@ -19,6 +19,10 @@ const Attend = connection.define('attend', {
     deleted: {
         type: Sequelize.BOOLEAN,
         allowNull: false
+    },
+    avaliable: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false
     }
 });
 
