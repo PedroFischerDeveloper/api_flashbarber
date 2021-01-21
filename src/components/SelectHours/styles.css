@@ -1,0 +1,45 @@
+.body_SelectHours {
+
+	width: 90%;
+	float: right;
+}
+
+.body_SelectHours #select_hoursTitle {
+	background: #e0ab48;
+	color: rgb(34, 34, 34);
+	font-size: 12pt;
+	font-weight: 600;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	margin-top: 0.5rem;
+	margin-bottom: 0rem;
+	border-radius: 1px;
+}
+
+.body_SelectHours #select_hours {
+	border-top: 0.1px solid rgb(128, 128, 128);
+	border-bottom: 0px;
+	border-left: 0px;
+	border-right: 0px;
+	border-radius: 1px;
+	background: #e0ab48;
+	padding-top: 0.3rem;
+	padding-bottom: 0.4rem;
+	color: rgb(34, 34, 34);
+	width: 100%;
+	font-weight: 600;
+}
+
+.body_SelectHours #select_hours_scheduled {
+	border-top: 0.1px solid rgb(128, 128, 128);
+	border-bottom: 0px;
+	border-left: 0px;
+	border-right: 0px;
+	border-radius: 1px;
+	background: rgb(212, 61, 61);
+	padding-top: 0.3rem;
+	padding-bottom: 0.4rem;
+	color: #e2cbca8e;
+	width: 100%;
+	font-weight: 600;
+}
