@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const connection = require("../database/database");
+const connection = require("../database");
 
 const Hour = connection.define('hour', {
     hour: {
@@ -9,6 +9,6 @@ const Hour = connection.define('hour', {
     }
 });
 
-//Hour.sync({force: true});
+Hour.sync({force: true});
 
 module.exports = Hour;

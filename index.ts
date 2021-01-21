@@ -10,7 +10,6 @@ const connection = require('./database/database');
 const AttendController = require("./Admin/attend/AttendController");
 const hourController = require("./Admin/hours/hourCrontroller");
 
-
 //body parse
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -31,3 +30,5 @@ app.use("/", AttendController);
 app.listen(8080, () => {
     console.log("servidor online");
 });
+
+export default app;

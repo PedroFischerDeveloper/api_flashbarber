@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const connection = require("../database/database");
+const connection = require("../database");
 
 const Hour = require("./Hour");
 
@@ -29,6 +29,6 @@ const Attend = connection.define('attend', {
 
 Hour.hasMany(Attend);
 
-//Attend.sync({force: true});
+Attend.sync({force: true});
 
 module.exports = Attend;
