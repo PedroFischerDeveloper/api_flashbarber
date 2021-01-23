@@ -23,11 +23,6 @@ export default class AttendModel {
             .leftJoin({ att: 'attends' }, 'att.hour_id', '=', 'hou.id')
             .whereNull('att.hour_id')
             
-            /*
-            .andWhere('att.created_at', '>=', `${today} 01:00:00`)
-            .andWhere('att.created_at', '<=', `${tomorrow} 23:00:00`)
-            */
-
             console.log(response)
             if(response == null || response.length <= 0) {
                 return {status: Response404.status, response: response, message: Response404.message};
