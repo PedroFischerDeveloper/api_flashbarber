@@ -1,24 +1,35 @@
+import AttendModel from '../models/AttendModel';
+
 
 export default class AttendController {
+    Model: any;
 
-    public async getAvaliable(req: any, res: any) {
-        return res.status(200).json({response: "ok"});
+    constructor() {
+        this.Model = new AttendModel()
     }
 
-    public async getAll(req: any, res: any) {
-        return res.status(200).json({response: "ok"});
+    async getAvaliable(req: any, res: any) {
+        const attend = await this.Model.getAvaliable();
+        return res.status(attend.status).json({response: attend.response, message: attend.message});
     }
 
-    public async getById(req: any, res: any) {
-        const {id} = req.params;
-        return res.status(200).json({response: id});
+    async getAll(req: any, res: any) {
+        console.log("a")
+        const attend = await this.Model.getAll();
+        return res.status(attend.status).json({response: attend.response, message: attend.message});
     }
 
-    public async post(req: any, res: any) {
-        return res.status(200).json({response: req.body});
+    async getById(req: any, res: any) {
+        const attend = await this.Model.getById();
+        return res.status(attend.status).json({response: attend.response, message: attend.message});
     }
 
-    public async delete(req: any, res: any) {
+    async save(req: any, res: any) {
+        const attend = await this.Model.save(req, res);
+        return res.status(attend.status).json({response: attend.response, message: attend.message});
+    }
+
+    async delete(req: any, res: any) {
         return res.status(200).json({response: req.body});
     }
 }

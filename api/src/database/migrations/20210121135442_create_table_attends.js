@@ -5,11 +5,18 @@ exports.up = (knex) => knex.schema.createTable('attends', table => {
     table.string('phone').unique().notNullable()
     table.string('email').unique()
 
-    table.boolean('isAvaliable').unique()
+    table.boolean('isAvaliable')
+    table.boolean('today')
+    table.boolean('week')
+    table.text('description')
 
-    //fk - hours
-    table.integer('hour_id').unsigned().notNullable();
-    table.foreign('hour_id').references('hours.id')
+    //fk - client
+    table.integer('user_id').unsigned().notNullable();
+    table.foreign('user_id').references('users.id')
+
+    //fk - service provider
+    table.integer('service_provider_id').unsigned().notNullable();
+    table.foreign('service_provider_id').references('service_provider.id')
     
 
     table.timestamp('created_at').defaultTo(knex.fn.now());
@@ -17,4 +24,4 @@ exports.up = (knex) => knex.schema.createTable('attends', table => {
     
   })
 
-exports.down = knex => knex.schema.dropTable('Attends');
+exports.down = knex => knex.schema.dropTable('attends');
