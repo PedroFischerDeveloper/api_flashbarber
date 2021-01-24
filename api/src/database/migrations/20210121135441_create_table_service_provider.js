@@ -1,14 +1,14 @@
 
-exports.up = (knex) => knex.schema.createTable('service_provider', table => {
-    table.increments('id')
-    table.string('name').notNullable()
-    table.string('email').unique().notNullable()
-    table.string('password').unique().notNullable()
+exports.up = (knex) => knex.schema.createTable('tb_service_provider', table => {
+  table.increments('cd_provider')
+  table.string('nm_provider').notNullable()
+  table.string('ds_email').unique().notNullable()
+  table.string('cd_password').unique().notNullable()
 
-    table.timestamp('created_at').defaultTo(knex.fn.now());
-    table.timestamp('updated_at').defaultTo(knex.fn.now());
-    
-  })
+  table.timestamp('created_at').defaultTo(knex.fn.now());
+  table.timestamp('updated_at').defaultTo(knex.fn.now());
 
-exports.down = knex => knex.schema.dropTable('service_provider');
+})
+
+exports.down = knex => knex.schema.dropTable('tb_service_provider');
 
