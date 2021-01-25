@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run serve",
     "dev": "concurrently \"npm run build:watch\" \"npm run serve:watch\"",
-    "migrations":"npx knex migrate:latest --knexfile knexfile.js migrate:latest",
+    "migrations": "npx knex migrate:latest --knexfile knexfile.js migrate:latest",
     "serve": "node dist/index.js",
     "serve:watch": "nodemon dist/index.js",
     "build": "tsc",
