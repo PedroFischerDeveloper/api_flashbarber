@@ -14,7 +14,6 @@ export default class AttendController {
     }
 
     async getAll(req: any, res: any) {
-        console.log("a")
         const attend = await this.Model.getAll();
         return res.status(attend.status).json({response: attend.response, message: attend.message});
     }

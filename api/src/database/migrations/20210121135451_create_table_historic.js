@@ -6,7 +6,7 @@ exports.up = (knex) => knex.schema.createTable('tb_historic', table => {
 	table.datetime('dt_attends');
 
 	table.timestamp('created_at').defaultTo(knex.fn.now());
-
+	table.timestamp('deleted_at').defaultTo(null);
 })
 
 exports.down = knex => knex.schema.dropTable('tb_historic');

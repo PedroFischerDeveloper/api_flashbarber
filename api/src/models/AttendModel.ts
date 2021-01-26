@@ -20,7 +20,7 @@ export default class AttendModel {
 
             const response = await knex.select('*')
             .from({ hou: 'hours' })
-            .leftJoin({ att: 'attends' }, 'att.hour_id', '=', 'hou.id')
+            .leftJoin({ att: 'tb_attends' }, 'att.hour_id', '=', 'hou.id')
             .whereNull('att.hour_id')
             
             console.log(response)
@@ -38,7 +38,7 @@ export default class AttendModel {
 
     async getAll() {
         try {
-            const response = await knex('attends');
+            const response = await knex('tb_attends');
             
             if(response == null || response.length <= 0) {
                 return {status: Response404.status, response: {}, message: Response404.message};

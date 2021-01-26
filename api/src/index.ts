@@ -2,6 +2,9 @@ import express from 'express';
 import bodyParser from "body-parser";
 import { Routes } from './router';
 
+require('dotenv').config({silent: true})
+const jwt = require('jsonwebtoken');
+
 const app: express.Application = express();
 
 app.use(bodyParser.json());
