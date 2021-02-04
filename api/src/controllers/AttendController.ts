@@ -19,7 +19,7 @@ export default class AttendController {
     }
 
     async getById(req: any, res: any) {
-        const attend = await this.Model.getById();
+        const attend = await this.Model.getById(req);
         return res.status(attend.status).json({response: attend.response, message: attend.message});
     }
 

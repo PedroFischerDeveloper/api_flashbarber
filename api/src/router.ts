@@ -12,11 +12,15 @@ import AttendController from './controllers/AttendController';
 import ServiceProviderController from './controllers/ServiceProviderController';
 import UserController from './controllers/UserController';
 import AuthController from './controllers/AuthController';
+import HourController from './controllers/HourController';
+import DayController from './controllers/DayController';
 
 const ControllerAttend = new AttendController();
 const ControllerServiceProvider= new ServiceProviderController();
 const ControllerUser = new UserController();
 const ControllerAuth = new AuthController();
+const ControllerHour = new HourController();
+const ControllerDay = new DayController();
 
 //auth
 router.post("/api/auth", async (req:  Request, res: Response) => {
@@ -76,6 +80,43 @@ router.post("/api/register", async (req:  Request, res: Response) => {
 
 router.delete("/api/admin/delete", async (req:  Request, res: Response) => {
     return ControllerUser.delete(req, res);
+});
+
+
+
+
+// hours
+router.get("/api/admin/hours/:cd_hour", async (req:  Request, res: Response) => {
+    return ControllerHour.getById(req, res);
+});
+
+router.post("/api/admin/hours", async (req:  Request, res: Response) => {
+    return ControllerHour.save(req, res);
+});
+
+router.put("/api/admin/hours", async (req:  Request, res: Response) => {
+    return ControllerHour.update(req, res);
+});
+
+router.delete("/api/admin/hours", async (req:  Request, res: Response) => {
+    return ControllerHour.delete(req, res);
+});
+
+// days
+router.get("/api/admin/days/:cd_day", async (req:  Request, res: Response) => {
+    return ControllerDay.getById(req, res);
+});
+
+router.post("/api/admin/days", async (req:  Request, res: Response) => {
+    return ControllerDay.save(req, res);
+});
+
+router.put("/api/admin/days", async (req:  Request, res: Response) => {
+    return ControllerDay.update(req, res);
+});
+
+router.delete("/api/admin/days", async (req:  Request, res: Response) => {
+    return ControllerDay.delete(req, res);
 });
 
 
