@@ -23,35 +23,59 @@ export default class AuthModel {
         try {
             const cripto = new Criptograph();
             const hashPassword = cripto.criptograph(cd_password);
-            
-            let response = null;
-
+          
             if(isProvider) {
-                response = await knex('tb_service_provider').where({
-                    ds_email,
-                    hashPassword
-                });
-            } else {
-                response = await knex('tb_users').where({
-                    ds_email,
-                    hashPassword
-                });
-            }
             
-
-            if(response == undefined || response.length <= 0) {
-                return {status: Response422.status, response: {}, message: Response422.message};
-            } else {
-
-                
-                const token = jwt.sign( response.cd_user , process.env.SECRET, {
-                    expiresIn: 30000 
+                const response = await knex('tb_service_provider')
+                .where({
+                    ds_email:ds_email,
+                    cd_password: hashPassword
                 });
+
+                let secret;
+
+                if(process.env['SECRET']) {
+                    secret = process.env['SECRET'];
+                } else {
+                    secret = "aSoeAScdnc@RE208_%@002";
+                }
                 
+                let id = response.cd_provider;
+
+                const token = jwt.sign( {id} , secret, {
+                    expiresIn: 30000 
+                });    
+
+                console.log(token)
                 return {status: Response200.status, response: {auth: true, token: token}, message: Response200.message};
 
+            } else {
+                
+                const response = await knex('tb_users')
+                .select('nm_user', 'ds_email', 'cd_password', 'cd_phone', 'created_at', 'updated_at')
+                .where({
+                    ds_email:ds_email,
+                    cd_password: hashPassword
+                });
 
+                let secret;
+
+                if(process.env['SECRET']) {
+                    secret = process.env['SECRET'];
+                } else {
+                    secret = "aSoeAScdnc@RE208_%@002";
+                }
+                
+                let id = response.cd_user;
+
+                const token = jwt.sign( {id} , secret, {
+                    expiresIn: 30000 
+                }); 
+
+                return {status: Response200.status, response: {auth: true, token: token}, message: Response200.message};
             }
+            
+          
 
         }catch(err) {
             return {status: Response500.status, response: err.name, message: Response500.message};

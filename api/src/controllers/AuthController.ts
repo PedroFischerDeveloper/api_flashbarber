@@ -4,7 +4,7 @@ import AuthModel from '../models/AuthModel';
 export default class AuthController {
     Model: any;
 
-    async construct() {
+    constructor() {
         this.Model = new AuthModel();
     }
 

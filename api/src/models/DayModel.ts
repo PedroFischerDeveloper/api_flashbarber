@@ -45,7 +45,13 @@ export default class DayModel {
         } = req.body;
 
         try {
-            
+            const checkExistis = await knex('tb_day_provider')
+            .where({cd_provider_id: cd_provider_id});
+
+            if(checkExistis.length > 0) {
+                return {status: Response422.status, response: {}, message: Response422.message};
+            }
+
             const response = await knex('tb_day_provider')
             .insert({
                 ds_monday,
