@@ -27,6 +27,7 @@ export default class AuthModel {
             if(isProvider) {
             
                 const response = await knex('tb_service_provider')
+                .select('cd_provider', 'nm_provider', 'ds_email', 'created_at', 'updated_at')
                 .where({
                     ds_email:ds_email,
                     cd_password: hashPassword
@@ -46,13 +47,14 @@ export default class AuthModel {
                     expiresIn: 30000 
                 });    
 
-                console.log(token)
-                return {status: Response200.status, response: {auth: true, token: token}, message: Response200.message};
+                return {status: Response200.status, response: {auth: true, token: token, provider:{
+                   response
+                }}, message: Response200.message}
 
             } else {
                 
                 const response = await knex('tb_users')
-                .select('nm_user', 'ds_email', 'cd_password', 'cd_phone', 'created_at', 'updated_at')
+                .select('nm_user', 'ds_email', 'cd_phone', 'created_at', 'updated_at')
                 .where({
                     ds_email:ds_email,
                     cd_password: hashPassword
@@ -72,7 +74,11 @@ export default class AuthModel {
                     expiresIn: 30000 
                 }); 
 
-                return {status: Response200.status, response: {auth: true, token: token}, message: Response200.message};
+                return {status: Response200.status, response: {auth: true, token: token, user:{
+                    user: response.cd_user,
+                    nm_user: response.nm_user,
+                    ds_email: response.ds_email
+                }}, message: Response200.message};
             }
             
           

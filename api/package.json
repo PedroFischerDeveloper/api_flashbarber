@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "npm run serve",
-    "dev": "concurrently \"npm run build:watch\" \"npm run serve:watch\"",
+    "dev": "nodemon index.ts",
     "migrations": "npx knex migrate:latest --knexfile knexfile.js migrate:latest",
     "serve": "node dist/index.js",
     "serve:watch": "nodemon dist/index.ts",

@@ -10,6 +10,7 @@ router.get("/api", (req: Request, res: Response) => {
 //atendimento
 import AttendController from './controllers/AttendController';
 import ServiceProviderController from './controllers/ServiceProviderController';
+
 import UserController from './controllers/UserController';
 import AuthController from './controllers/AuthController';
 import HourController from './controllers/HourController';
@@ -30,21 +31,18 @@ router.post("/api/auth", async (req:  Request, res: Response) => {
 
 
 // attends
-router.get("/api/admin/attends", async (req:  Request, res: Response) => {
-    ControllerAttend.getAll(req, res);   
-});
-
-router.get("/api/admin/attends/:id", async (req:  Request, res: Response) => {
+router.get("/api/attends/:id", async (req:  Request, res: Response) => {
     ControllerAttend.getById(req, res);
 });
 
-router.post("/api/admin/attends/save", async (req:  Request, res: Response) => {
+router.post("/api/attends/save", async (req:  Request, res: Response) => {
     ControllerAttend.save(req, res);   
 });
 
-router.delete("/api/admin/attends/delete", async (req:  Request, res: Response) => {
+router.delete("/api/attends/delete", async (req:  Request, res: Response) => {
     ControllerAttend.delete(req, res);   
 });
+
 
 // providers
 router.get("/api/providers/:cd_provider", async (req:  Request, res: Response) => {
@@ -71,9 +69,6 @@ router.post("/api/register", async (req:  Request, res: Response) => {
 router.delete("/api/admin/delete", async (req:  Request, res: Response) => {
     return ControllerUser.delete(req, res);
 });
-
-
-
 
 // hours
 router.get("/api/hours/:cd_hour", async (req:  Request, res: Response) => {

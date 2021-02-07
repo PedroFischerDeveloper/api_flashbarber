@@ -8,98 +8,116 @@ import {
 
 } from '../responseStatus/responseStatus';
 
+import Pagination from '../utils/Paginate';
+import Criptograph from '../utils/Criptograph';
 
 export default class AttendModel {
+    paginate: any; 
 
-    async getAvaliable() {
-        try {
-            const DateToFormat = new Date();
-           
-            const today = DateToFormat.getFullYear() + "-" + DateToFormat.getMonth() + 1 + "-" + DateToFormat.getDate();
-            const tomorrow = today; 
-
-            const response = await knex.select('*')
-            .from({ hou: 'hours' })
-            .leftJoin({ att: 'tb_attends' }, 'att.hour_id', '=', 'hou.id')
-            .whereNull('att.hour_id')
-            
-            console.log(response)
-            if(response == null || response.length <= 0) {
-                return {status: Response404.status, response: response, message: Response404.message};
-            } else {
-                return {status: Response200.status, response: response, message: Response200.message};
-            }
-
-        } catch(err) {
-            console.log(err)
-            return {status: Response500.status, response: err, message: Response500.message};
-        }
+    constructor() {
+        this.paginate = new Pagination();
     }
 
-    async getAll() {
-        try {
-            const response = await knex('tb_attends');
-            
-            if(response == null || response.length <= 0) {
-                return {status: Response404.status, response: {}, message: Response404.message};
-            } else {
-                return {status: Response200.status, response: response, message: Response200.message};
-            }
+    async getPaginate(req) {
 
-        } catch(err) {
-            return {status: Response500.status, response: err, message: Response500.message};
-        }
     }
 
     async getById(req) {
-        try {
-            const {id} = req.params;
-            const response = await knex('attends').where({id: id});
-            
-            if(response == null || response.length <= 0) {
-                return {status: Response404.status, response: {}, message: Response200.message};
-            } else {
-                return {status: Response200.status, response: response, message: Response404.message};
-            }
+        const {cd_id} = req;
 
-        } catch(err) {
-            return {status: Response500.status, response: err, message: Response500.message};
-        }
+        const attend = await knex('tb_attends').where({
+            cd_id: cd_id
+        });
+
+        return {status: Response201.status, response: attend, message: Response201.message};
     }
 
     async save(req) {
-        try {
-            
-            let {attend} = req.body;
-            
-            const dbResponse = await knex('users').insert({
-                name: attend.name, 
-                email: attend.email,  
-                password: attend.password 
-            });
-            
-            console.log(dbResponse)
+        const {
+            cd_provider_id, 
+            cd_user_id,
+            dt_attends,
+            ds_description,
+            ds_nome,
+            ds_phone,
+            ds_email,
+        } = req.body;
 
-            if(dbResponse == undefined || dbResponse.length <= 0) {
-                return {status: Response500.status, response: attend, message: "Não foi possível recuperar o id"};
-            } else {
-                attend.user_id = dbResponse[0];
+     
+        
+        const checkUserExists = await knex('tb_users')
+        .where(
+            {
+                cd_user: cd_user_id
             }
+        );
+
+        if(checkUserExists == undefined || checkUserExists.length <= 0) {
             
-            const response = await knex('attends').insert(attend)
+            const cripto = new Criptograph();
             
-            if(response == null || response.length <= 0) {
-                return {status: Response404.status, response: {}, message: Response404.message};
-            } else {
-                return {status: Response201.status, response: response, message: Response201.message};
+            const randomPassword = Math.random().toString(36).substring(0, 20)
+            
+            const hashPassword = cripto.criptograph(randomPassword);
+
+            try {
+                const registeredUser = await knex('tb_users')
+                .insert({
+                    nm_user: ds_nome,
+                    ds_email: ds_email, 
+                    cd_phone: ds_phone,
+                    cd_password: hashPassword
+                });
+
+                const cd_users_provider_attends = await knex('tb_users_provider_attends').insert({
+                    cd_user_id: registeredUser,
+                    cd_provider_id: cd_provider_id,
+                });
+                
+                const attend = await knex('tb_attends').insert({
+                    cd_isAvaliable: 0,
+                    dt_attends: dt_attends,
+                    ds_description: ds_description,
+                    cd_users_provider_id: cd_provider_id
+                });
+
+                return {status: Response201.status, response: attend, message: Response201.message};
+
+            } catch(err) {
+                return {status: Response500.status, response: err, message: Response500.message};
             }
 
-        } catch(err) {
-            return {status: Response500.status, response: err, message: Response500.message};
+        } else {
+
+            try {
+                const cd_users_provider_attends = await knex('tb_users_provider_attends').insert({
+                    cd_user_id: cd_user_id,
+                    cd_provider_id: cd_provider_id,
+                });
+
+                const attend = await knex('tb_attends').insert({
+                    cd_isAvaliable: 0,
+                    dt_attends: dt_attends,
+                    ds_description: ds_description,
+                    cd_users_provider_id: cd_provider_id
+                    });
+    
+                    return {status: Response201.status, response: attend, message: Response201.message};
+
+            } catch(err) {
+                return {status: Response500.status, response: err.name, message: Response500.message};
+            }
+        
         }
+    
     }
 
-    async delete() {
-
+    async put(req) {
+        
     }
+
+    async delete(req) {
+        
+    }
+
 }
