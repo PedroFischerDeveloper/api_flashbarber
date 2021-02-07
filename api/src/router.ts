@@ -31,7 +31,11 @@ router.post("/api/auth", async (req:  Request, res: Response) => {
 
 
 // attends
-router.get("/api/attends/:id", async (req:  Request, res: Response) => {
+router.get("/api/providers/attends/:cd_provider", async (req:  Request, res: Response) => {
+    ControllerAttend.getAllByProvider(req, res);
+});
+
+router.get("/api/attends/:cd_id", async (req:  Request, res: Response) => {
     ControllerAttend.getById(req, res);
 });
 

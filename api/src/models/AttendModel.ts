@@ -23,13 +23,24 @@ export default class AttendModel {
     }
 
     async getById(req) {
-        const {cd_id} = req;
-
+        const {cd_id} = req.params;
+        
         const attend = await knex('tb_attends').where({
             cd_id: cd_id
         });
 
-        return {status: Response201.status, response: attend, message: Response201.message};
+        return {status: Response200.status, response: attend, message: Response200.message};
+    }
+
+    async getByProvider(req) {
+        const {cd_provider} = req.params;
+        
+        const attend = await knex('tb_attends').where({
+            cd_users_provider_id: cd_provider,
+            cd_isAvaliable: 1,
+        });
+
+        return {status: Response200.status, response: attend, message: Response200.message};
     }
 
     async save(req) {
@@ -43,8 +54,6 @@ export default class AttendModel {
             ds_email,
         } = req.body;
 
-     
-        
         const checkUserExists = await knex('tb_users')
         .where(
             {
