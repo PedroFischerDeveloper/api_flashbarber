@@ -29,7 +29,7 @@ function App() {
 							<p>Data do Agendamento:</p>
 						</Col>
 						<Col xs={12} >
-							<p id="TextData_Schedules">{date ? format(date, 'dd MMM yyyy', { locale: ptBR }) : 'none'}.</p>
+							<p id="TextData_Schedules">{date ? format(date, 'dd MMM yyyy', { locale: ptBR }) : '-'}</p>
 						</Col>
 					</Col>
 					<Col xs={12}>

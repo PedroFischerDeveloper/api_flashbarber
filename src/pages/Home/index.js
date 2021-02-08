@@ -14,12 +14,12 @@ function App() {
 		<body className='Body_Home'>
 			<Container>
 				<Row>
-					<Col sm={12}>
+					<Col sm={12} mg={6} lg={6}>
 						<img src={Logo} id="Logo_Home_barberShop" alt="logo"></img>
 					</Col>
-					<Col sm={12} id="title_Home_barberShop">Tribo Barbearia</Col>
-					<Col sm={12} id="description_Home_barberShop">Corte e Barba</Col>
-					<Col sm={12} id="description_Home_barberShop">
+					<Col sm={12} mg={6} lg={6} id="title_Home_barberShop">Tribo Barbearia<p id="description_Home_barberShop">Corte e Barba</p></Col>
+					<Col sm={12} mg={6} lg={6} id="description_Home_barberShop"></Col>
+					<Col sm={12} mg={6} lg={6} id="description_Home_barberShop">
 						<Button
 							onClick={handleSchedule}
 							variant="warning"
